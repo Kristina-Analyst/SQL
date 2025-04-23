@@ -1,0 +1,23 @@
+SELECT
+ sp.continent,
+ SUM(p.price) AS revenue,
+ (SUM(CASE
+       WHEN p.category = 'Bookcases & shelving units' THEN p.price
+   END
+     ) ) AS revenue_from_bookcases,
+ (SUM(CASE
+       WHEN p.category = 'Bookcases & shelving units' THEN p.price
+   END
+     ) *100) / SUM(p.price) AS revenue_from_bookcases_percent
+FROM
+ `data-analytics-mate.DA.session_params` sp
+JOIN
+ `DA.order` o
+ON
+ sp.ga_session_id = o.ga_session_id
+LEFT JOIN
+ `DA.product` p
+ON
+ o.item_id = p.item_id
+GROUP BY
+ sp.continent
